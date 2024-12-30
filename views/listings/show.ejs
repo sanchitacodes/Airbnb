@@ -1,5 +1,8 @@
 <% layout("/layouts/boilerplate") %>
-
+<script>
+    const mapToken = "<%= process.env.MAP_TOKEN %>";
+    const listing = <%- JSON.stringify(listing) %>;
+</script>
 <div class="row mt-3">
     <div class="col-8 offset-3">
     <h3><%= listing.title %></h3>
@@ -83,11 +86,11 @@
     </div>
     <% } %>
 </div>
-<!-- <div class="col-8 offset-3 mb-3">
+<div class="col-8 offset-3 mb-3">
     <h3>Where you'll be</h3>
     <div id="map"></div>
 </div>
-</div> -->
+</div>
 <!-- <script>
     const map = new maplibregl.Map({
         container: 'map',
@@ -97,6 +100,14 @@
         center: [77.2090, 28.6139]
     });
 </script> -->
+<!-- <script>
+  mapboxgl.accessToken = mapToken;
+  const map = new mapboxgl.Map({
+  container: 'map', // container's id or the HTML element to render the map
+  style: 'mapbox://styles/mapbox/streets-v12', // style URL
+  center: [77.2090, 28.6139], // starting position [lng, lat]
+  zoom: 10.68 // starting zoom
+});
+</script> -->
 
-
-<!-- <script src="/js/map.js"></script> -->
+<script src="/js/map.js"></script>
