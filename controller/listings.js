@@ -63,12 +63,31 @@ module.exports.updateListing = async (req, res) => {
     let {id} = req.params;
     let listing = await Listing.findByIdAndUpdate(id, {...req.body.listing});
 
+    const geoData = await geocodingClient
+        .forwardGeocode({
+            query: req.body.listing.location,
+            limit: 1,
+        })
+        .send();
+
+    if (geoData.body.features.length > 0) {
+        const [lng, lat] = geoData.body.features[0].geometry.coordinates;
+        listing.geometry = {
+            type: "Point",
+            coordinates: [lng, lat],
+        };
+    } else {
+        req.flash("error", "Unable to find coordinates for the updated location.");
+        return res.redirect(`/listings/${id}`);
+    }
+
+
     if(typeof req.file !== "undefined") { 
     let url = req.file.path;
     let filename = req.file.filename;
     listing.image = {url, filename};
-    await listing.save();
     }
+    await listing.save();
 
     req.flash("success", "Listing Updated!");
     // res.redirect("/listings");
